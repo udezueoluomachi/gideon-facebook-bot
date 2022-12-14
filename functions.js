@@ -9,12 +9,12 @@ _exports.returnBotTypingTimeInSeconds = function (textLength) {
 };
 
 _exports.checkIfBotName = function(message) {
-    const botNameSearch = new RegExp("gideon","gi");
+    const botNameSearch = new RegExp("(gideon|gideon chi)","gi");
     message = message.replace(/\p{Extended_Pictographic}/gu, "");
     return new Promise(function (resolve, reject) {
     
         if( message.search(botNameSearch) != -1 && message.search(botNameSearch) < 2 ) {
-            message = message.replace(/gideon/i, "");
+            message = message.replace(/(gideon|gideon chi)/i, "");
             resolve(message);
         }
         else {

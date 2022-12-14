@@ -30,22 +30,23 @@ login(facebookAccountCrenentials , (err, api) => {
         if(err) return console.error(err);
         
         if (event.type === "message" || event.type === "message_reply") {
-            api.markAsRead(event.threadID, (err) => {
+            api.markAsRead(event
+            .threadID, (err) => {
                 if(err) return console.log(err);
             });
             if(event.body) {
                 if(event.isGroup) {
                     checkIfBotName(event.body)
                     .then(message => {
-                        api.sendTypingIndicator(event.threadID, err => {if(err) return console.log(err)})
                         openai.createCompletion({
                           model: "text-davinci-003",
                           prompt: message,
-                          temperature: 0.1,
+                          temperature: 0,
                           "max_tokens": 2048
                         })
                         .then(response => response.data.choices[0].text)
                         .then(response => {
+                            api.sendTypingIndicator(event.threadID, err => {if(err) return console.log(err)})
                             if(response.length > 0) {
                                 setTimeout(() => api.sendMessage(response, event.threadID , event.messageID), returnBotTypingTimeInSeconds(response.length));
                             }
@@ -58,15 +59,15 @@ login(facebookAccountCrenentials , (err, api) => {
                     .catch(err => {return console.log(err)})
                 }
                 else {
-                    api.sendTypingIndicator(event.threadID, err => {if(err) return console.log(err)})
                     openai.createCompletion({
                       model: "text-davinci-003",
                       prompt: event.body,
-                      temperature: 0.1,
+                      temperature: 0,
                       "max_tokens": 2048
                     })
                     .then(response => response.data.choices[0].text)
                     .then(response => {
+                        api.sendTypingIndicator(event.threadID, err => {if(err) return console.log(err)})
                         if(response.length > 0) {
                             setTimeout(() => api.sendMessage(response, event.threadID , event.messageID), returnBotTypingTimeInSeconds(response.length));
                         }
